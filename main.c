@@ -6,9 +6,10 @@
 #include "Hacl_Poly1305_32.h"
 
 // XXX
-# define le16toh(x) letoh16(x)
-# define le32toh(x) letoh32(x)
-# define le64toh(x) letoh64(x)
+#include <endian.h>
+#define le16toh(x) letoh16(x)
+#define le32toh(x) letoh32(x)
+#define le64toh(x) letoh64(x)
 
 #define ARRAY(name, size) \
     uint8_t name[size]; \
