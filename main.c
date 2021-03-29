@@ -19,7 +19,7 @@ static int p1305(void) {
     for(size_t i = 0; i < 64; i++) {
         crypto_poly1305(mac1, in, i, key);
         Hacl_Poly1305_32_poly1305_mac(mac2, i, in, key);
-        status |= crypto_verify16(mac1, mac2);
+        status |= crypto_verify32(mac1, mac2);
 	}
 	return status;
 }
