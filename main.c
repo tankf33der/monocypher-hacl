@@ -29,6 +29,6 @@ int main(void) {
 	
 	status |= p1305();
 
-	printf("All OK\n");	
+	printf("%s\n", status != 0 ? "FAIL" : "OK");	
 	return status;
 }
