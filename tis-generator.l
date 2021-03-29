@@ -15,7 +15,7 @@
 (setq
    *M
    (quote
-      gcc_sparc32 sparc32
+      gcc_sparc_32 sparc_32
       # sparc_64 sparc_32
       # x86_32 x86_64 x86_16
       # armeb_eabi arm_eabi aarch64 aarch64eb
