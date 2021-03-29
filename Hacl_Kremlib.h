@@ -22,13 +22,12 @@
  */
 
 
-#ifndef __Hacl_Poly1305_32_H
-#define __Hacl_Poly1305_32_H
+#ifndef __Hacl_Kremlib_H
+#define __Hacl_Kremlib_H
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
-
 
 #include "evercrypt_targetconfig.h"
 #include "libintvector.h"
@@ -37,25 +36,45 @@ extern "C" {
 #include <string.h>
 #include "kremlin/internal/target.h"
 
-#include "Hacl_Kremlib.h"
 
-extern uint32_t Hacl_Poly1305_32_blocklen;
 
-typedef uint64_t *Hacl_Poly1305_32_poly1305_ctx;
 
-void Hacl_Poly1305_32_poly1305_init(uint64_t *ctx, uint8_t *key);
+static inline uint8_t FStar_UInt8_eq_mask(uint8_t a, uint8_t b);
 
-void Hacl_Poly1305_32_poly1305_update1(uint64_t *ctx, uint8_t *text);
+static inline uint64_t FStar_UInt64_eq_mask(uint64_t a, uint64_t b);
 
-void Hacl_Poly1305_32_poly1305_update(uint64_t *ctx, uint32_t len, uint8_t *text);
+static inline uint64_t FStar_UInt64_gte_mask(uint64_t a, uint64_t b);
 
-void Hacl_Poly1305_32_poly1305_finish(uint8_t *tag, uint8_t *key, uint64_t *ctx);
+static inline FStar_UInt128_uint128
+FStar_UInt128_add(FStar_UInt128_uint128 a, FStar_UInt128_uint128 b);
 
-void Hacl_Poly1305_32_poly1305_mac(uint8_t *tag, uint32_t len, uint8_t *text, uint8_t *key);
+static inline FStar_UInt128_uint128
+FStar_UInt128_add_mod(FStar_UInt128_uint128 a, FStar_UInt128_uint128 b);
+
+static inline FStar_UInt128_uint128
+FStar_UInt128_logor(FStar_UInt128_uint128 a, FStar_UInt128_uint128 b);
+
+static inline FStar_UInt128_uint128
+FStar_UInt128_shift_left(FStar_UInt128_uint128 a, uint32_t s);
+
+static inline FStar_UInt128_uint128
+FStar_UInt128_shift_right(FStar_UInt128_uint128 a, uint32_t s);
+
+static inline FStar_UInt128_uint128 FStar_UInt128_uint64_to_uint128(uint64_t a);
+
+static inline uint64_t FStar_UInt128_uint128_to_uint64(FStar_UInt128_uint128 a);
+
+static inline FStar_UInt128_uint128 FStar_UInt128_mul_wide(uint64_t x, uint64_t y);
+
+static inline void store128_le(uint8_t *x0, FStar_UInt128_uint128 x1);
+
+static inline void store128_be(uint8_t *x0, FStar_UInt128_uint128 x1);
+
+static inline FStar_UInt128_uint128 load128_be(uint8_t *x0);
 
 #if defined(__cplusplus)
 }
 #endif
 
-#define __Hacl_Poly1305_32_H_DEFINED
+#define __Hacl_Kremlib_H_DEFINED
 #endif
