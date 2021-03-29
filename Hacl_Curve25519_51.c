@@ -924,7 +924,7 @@ static void encode_point(uint8_t *o, uint64_t *i)
     uint32_t i0;
     for (i0 = (uint32_t)0U; i0 < (uint32_t)4U; i0++)
     {
-      store64_le(o + i0 * (uint32_t)8U, u64s[i0]);
+      store64_le_p(o + i0 * (uint32_t)8U, u64s[i0]);
     }
   }
 }
@@ -950,7 +950,7 @@ void Hacl_Curve25519_51_scalarmult(uint8_t *out, uint8_t *priv, uint8_t *pub)
     {
       uint64_t *os = tmp;
       uint8_t *bj = pub + i * (uint32_t)8U;
-      uint64_t u = load64_le(bj);
+      uint64_t u = load64_le_p(bj);
       uint64_t r = u;
       uint64_t x0 = r;
       os[i] = x0;
