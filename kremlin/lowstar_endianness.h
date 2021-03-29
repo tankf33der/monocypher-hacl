@@ -188,6 +188,7 @@ inline static void store64(uint8_t *b, uint64_t i) {
 
 /* Legacy accessors so that this header can serve as an implementation of
  * C.Endianness */
+
 #define load16_le(b) (le16toh(load16(b)))
 #define store16_le(b, i) (store16(b, htole16(i)))
 #define load16_be(b) (be16toh(load16(b)))
@@ -207,6 +208,7 @@ inline static void store64(uint8_t *b, uint64_t i) {
  * conflicts, because of course both insist on having no prefixes. Until a
  * prefix is added, or until we truly retire FStar.Endianness, solve this issue
  * in an elegant way. */
+
 #define load16_le0 load16_le
 #define store16_le0 store16_le
 #define load16_be0 load16_be
