@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <endian.h>
 #include "monocypher.h"
 #include "Hacl_Poly1305_32.h"
 
