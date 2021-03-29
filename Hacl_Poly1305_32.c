@@ -23,6 +23,27 @@
 
 #include "Hacl_Poly1305_32.h"
 
+typedef int8_t   i8;
+typedef uint8_t  u8;
+typedef int16_t  i16;
+typedef uint32_t u32;
+typedef int32_t  i32;
+typedef int64_t  i64;
+typedef uint64_t u64;
+static u32 load32_le_p(u8 *s)
+{
+    return (u32)s[0]
+        | ((u32)s[1] <<  8)
+        | ((u32)s[2] << 16)
+        | ((u32)s[3] << 24);
+}
+
+static u64 load64_le_p(u8 *s)
+{
+    return load32_le(s) | ((u64)load32_le(s+4) << 32);
+}
+
+
 uint32_t Hacl_Poly1305_32_blocklen = (uint32_t)16U;
 
 void Hacl_Poly1305_32_poly1305_init(uint64_t *ctx, uint8_t *key)
@@ -64,9 +85,9 @@ void Hacl_Poly1305_32_poly1305_init(uint64_t *ctx, uint8_t *key)
   acc[2U] = (uint64_t)0U;
   acc[3U] = (uint64_t)0U;
   acc[4U] = (uint64_t)0U;
-  u0 = load64_le(kr);
+  u0 = load64_le_p(kr);
   lo = u0;
-  u = load64_le(kr + (uint32_t)8U);
+  u = load64_le_p(kr + (uint32_t)8U);
   hi = u;
   mask0 = (uint64_t)0x0ffffffc0fffffffU;
   mask1 = (uint64_t)0x0ffffffc0ffffffcU;
@@ -120,9 +141,9 @@ void Hacl_Poly1305_32_poly1305_update1(uint64_t *ctx, uint8_t *text)
   uint64_t *pre = ctx + (uint32_t)5U;
   uint64_t *acc = ctx;
   uint64_t e[5U] = { 0U };
-  uint64_t u0 = load64_le(text);
+  uint64_t u0 = load64_le_p(text);
   uint64_t lo = u0;
-  uint64_t u = load64_le(text + (uint32_t)8U);
+  uint64_t u = load64_le_p(text + (uint32_t)8U);
   uint64_t hi = u;
   uint64_t f0 = lo;
   uint64_t f1 = hi;
@@ -337,9 +358,9 @@ void Hacl_Poly1305_32_poly1305_update(uint64_t *ctx, uint32_t len, uint8_t *text
     {
       uint8_t *block = text + i * (uint32_t)16U;
       uint64_t e[5U] = { 0U };
-      uint64_t u0 = load64_le(block);
+      uint64_t u0 = load64_le_p(block);
       uint64_t lo = u0;
-      uint64_t u = load64_le(block + (uint32_t)8U);
+      uint64_t u = load64_le_p(block + (uint32_t)8U);
       uint64_t hi = u;
       uint64_t f0 = lo;
       uint64_t f1 = hi;
@@ -568,9 +589,9 @@ void Hacl_Poly1305_32_poly1305_update(uint64_t *ctx, uint32_t len, uint8_t *text
     uint64_t o3;
     uint64_t o4;
     memcpy(tmp, last, rem * sizeof (uint8_t));
-    u0 = load64_le(tmp);
+    u0 = load64_le_p(tmp);
     lo = u0;
-    u = load64_le(tmp + (uint32_t)8U);
+    u = load64_le_p(tmp + (uint32_t)8U);
     hi = u;
     f0 = lo;
     f1 = hi;
@@ -800,9 +821,9 @@ void Hacl_Poly1305_32_poly1305_finish(uint8_t *tag, uint8_t *key, uint64_t *ctx)
   hi0 = (f212 >> (uint32_t)12U | f312 << (uint32_t)14U) | f41 << (uint32_t)40U;
   f10 = lo0;
   f11 = hi0;
-  u0 = load64_le(ks);
+  u0 = load64_le_p(ks);
   lo = u0;
-  u = load64_le(ks + (uint32_t)8U);
+  u = load64_le_p(ks + (uint32_t)8U);
   hi = u;
   f20 = lo;
   f21 = hi;
