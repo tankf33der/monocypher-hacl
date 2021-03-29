@@ -42,6 +42,20 @@ static u64 load64_le_p(u8 *s)
 {
     return load32_le_p(s) | ((u64)load32_le_p(s+4) << 32);
 }
+static void store32_le_p(u8 out[4], u32 in)
+{
+    out[0] =  in        & 0xff;
+    out[1] = (in >>  8) & 0xff;
+    out[2] = (in >> 16) & 0xff;
+    out[3] = (in >> 24) & 0xff;
+}
+
+static void store64_le_p(u8 out[8], u64 in)
+{
+    store32_le_p(out    , (u32)in );
+    store32_le_p(out + 4, in >> 32);
+}
+
 
 
 uint32_t Hacl_Poly1305_32_blocklen = (uint32_t)16U;
@@ -833,8 +847,8 @@ void Hacl_Poly1305_32_poly1305_finish(uint8_t *tag, uint8_t *key, uint64_t *ctx)
   r11 = r1 + c;
   f30 = r0;
   f31 = r11;
-  store64_le(tag, f30);
-  store64_le(tag + (uint32_t)8U, f31);
+  store64_le_p(tag, f30);
+  store64_le_p(tag + (uint32_t)8U, f31);
 }
 
 void Hacl_Poly1305_32_poly1305_mac(uint8_t *tag, uint32_t len, uint8_t *text, uint8_t *key)
