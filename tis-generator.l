@@ -3,7 +3,7 @@
    (prinl "{")
    (printsp "name" ': (pack F " - " M))
    (prinl ",")
-   (printsp "files" ': "main.c, Hacl_Poly1305_32.c, monocypher.c")
+   (printsp "files" ': "all")
    (prinl ",")
    (printsp "cpp-extra-args" ': "-I. -I kremlib/dist/minimal")
    (prinl ",")
