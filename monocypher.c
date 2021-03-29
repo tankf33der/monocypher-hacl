@@ -85,14 +85,14 @@ static size_t align(size_t x, size_t pow_2)
     return (~x + 1) & (pow_2 - 1);
 }
 
-u32 load24_le(const u8 s[3])
+static u32 load24_le(const u8 s[3])
 {
     return (u32)s[0]
         | ((u32)s[1] <<  8)
         | ((u32)s[2] << 16);
 }
 
-u32 load32_le(const u8 s[4])
+static u32 load32_le(const u8 s[4])
 {
     return (u32)s[0]
         | ((u32)s[1] <<  8)
@@ -100,12 +100,12 @@ u32 load32_le(const u8 s[4])
         | ((u32)s[3] << 24);
 }
 
-u64 load64_le(const u8 s[8])
+static u64 load64_le(const u8 s[8])
 {
     return load32_le(s) | ((u64)load32_le(s+4) << 32);
 }
 
-void store32_le(u8 out[4], u32 in)
+static void store32_le(u8 out[4], u32 in)
 {
     out[0] =  in        & 0xff;
     out[1] = (in >>  8) & 0xff;
@@ -113,22 +113,22 @@ void store32_le(u8 out[4], u32 in)
     out[3] = (in >> 24) & 0xff;
 }
 
-void store64_le(u8 out[8], u64 in)
+static void store64_le(u8 out[8], u64 in)
 {
     store32_le(out    , (u32)in );
     store32_le(out + 4, in >> 32);
 }
 
-void load32_le_buf (u32 *dst, const u8 *src, size_t size) {
+static void load32_le_buf (u32 *dst, const u8 *src, size_t size) {
     FOR(i, 0, size) { dst[i] = load32_le(src + i*4); }
 }
-void load64_le_buf (u64 *dst, const u8 *src, size_t size) {
+static void load64_le_buf (u64 *dst, const u8 *src, size_t size) {
     FOR(i, 0, size) { dst[i] = load64_le(src + i*8); }
 }
-void store32_le_buf(u8 *dst, const u32 *src, size_t size) {
+static void store32_le_buf(u8 *dst, const u32 *src, size_t size) {
     FOR(i, 0, size) { store32_le(dst + i*4, src[i]); }
 }
-void store64_le_buf(u8 *dst, const u64 *src, size_t size) {
+static void store64_le_buf(u8 *dst, const u64 *src, size_t size) {
     FOR(i, 0, size) { store64_le(dst + i*8, src[i]); }
 }
 
