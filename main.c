@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include "monocypher.h"
 #include "Hacl_Poly1305_32.h"
+#include "Hacl_Curve25519_51.h"
 
 #define ARRAY(name, size) \
     uint8_t name[size]; \
@@ -24,10 +25,24 @@ static int p1305(void) {
 	return status;
 }
 
+//@ ensures \result == 0;
+int x25519(void) {
+    ARRAY(key, 32);
+    ARRAY(pub1, 32);
+    ARRAY(pub2, 32);
+    key[0] = 0;
+    int status = 0;
+    crypto_x25519_public_key(pub1, key);
+    Hacl_Curve25519_51_secret_to_public(pub2, key);
+    status |= crypto_verify32(pub1, pub2);
+    return status;
+}
+
 int main(void) {
 	int status = 0;
 	
 	status |= p1305();
+	status |= x25519();
 
 	printf("%s\n", status != 0 ? "FAIL" : "OK");	
 	return status;
