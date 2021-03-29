@@ -5,12 +5,6 @@
 #include "monocypher.h"
 #include "Hacl_Poly1305_32.h"
 
-// XXX
-#include <endian.h>
-#define le16toh(x) letoh16(x)
-#define le32toh(x) letoh32(x)
-#define le64toh(x) letoh64(x)
-
 #define ARRAY(name, size) \
     uint8_t name[size]; \
     for(size_t i = 0; i < size; i++) name[i] = i;

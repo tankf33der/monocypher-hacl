@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 
+#include <endian.h>
 
 #include "Hacl_Poly1305_32.h"
 
