@@ -15,14 +15,12 @@
 (setq
    *M
    (quote
-      sparc_64 sparc_32
-      x86_32 x86_64
-      x86_16 x86_16_huge
-      x86_win32 x86_win64
-      armeb_eabi arm_eabi aarch64 aarch64eb
-      rv64ifdq rv32ifdq
-      mips_o32 mips_n32 mips_64 mipsel_64
-      mipsel_n32 apple_ppc_32      
+      gcc_sparc_64 gcc_sparc_32
+      gcc_x86_32 gcc_x86_64 gcc_x86_16 
+      gcc_armeb_eabi gcc_arm_eabi gcc_aarch64 aarch64eb
+      gcc_rv64ifdq gcc_rv32ifdq
+      gcc_mips_o32 gcc_mips_n32 gcc_mips_64 gcc_mipsel_64
+      gcc_mipsel_n32 gcc_apple_ppc_32      
    )
    *F
    (quote
