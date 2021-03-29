@@ -33,7 +33,7 @@ extern "C" {
 #include "evercrypt_targetconfig.h"
 // #include "libintvector.h"
 #include "kremlin/internal/types.h"
-#include "kremlin/lowstar_endianness.h"
+//#include "kremlin/lowstar_endianness.h"
 #include <string.h>
 #include "kremlin/internal/target.h"
 
