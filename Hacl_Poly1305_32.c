@@ -40,7 +40,7 @@ static u32 load32_le_p(u8 *s)
 
 static u64 load64_le_p(u8 *s)
 {
-    return load32_le(s) | ((u64)load32_le(s+4) << 32);
+    return load32_le_p(s) | ((u64)load32_le_p(s+4) << 32);
 }
 
 
