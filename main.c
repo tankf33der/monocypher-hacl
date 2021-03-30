@@ -61,7 +61,7 @@ int hmac(void) {
                             hmac
 	*/                       
 	//         i = 0 generates error ^^^^^ while reading from NULL.
-    for(size_t i = 1; i < 64; i++) {
+    for(size_t i = 0; i < 64; i++) {
     	hash1[1] = 77;
         crypto_hmac_sha512(hash1, key, i, in, i);
         Hacl_HMAC_compute_sha2_512(hash2, key, i, in, i);
@@ -138,7 +138,13 @@ int sign_check_ed25519(void) {
 	status |= crypto_verify64(hash1, hash2);
     
     status |= crypto_ed25519_check(hash1, pub1, in, 32);
-    status |= !Hacl_Ed25519_verify(pub2, 32, in, hash2);
+    status |= !Hacl_Ed25519_verify(pub2, 32, in, hash2);	// as bool: 1 - ok, 0 - wrong
+
+	// XXX
+    for(size_t i = 0; i < 64; i++) hash2[i];
+    // should fail
+    status |= Hacl_Ed25519_verify(hash2, 0, in, hash2);		// as bool: 1 - ok, 0 - wrong
+    
     return status;
 }
 
