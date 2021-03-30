@@ -24,6 +24,40 @@
 
 #include "Hacl_Blake2b_32.h"
 
+typedef int8_t   i8;
+typedef uint8_t  u8;
+typedef int16_t  i16;
+typedef uint32_t u32;
+typedef int32_t  i32;
+typedef int64_t  i64;
+typedef uint64_t u64;
+static u32 load32_le_p(u8 *s)
+{
+    return (u32)s[0]
+        | ((u32)s[1] <<  8)
+        | ((u32)s[2] << 16)
+        | ((u32)s[3] << 24);
+}
+
+static u64 load64_le_p(u8 *s)
+{
+    return load32_le_p(s) | ((u64)load32_le_p(s+4) << 32);
+}
+static void store32_le_p(u8 out[4], u32 in)
+{
+    out[0] =  in        & 0xff;
+    out[1] = (in >>  8) & 0xff;
+    out[2] = (in >> 16) & 0xff;
+    out[3] = (in >> 24) & 0xff;
+}
+
+static void store64_le_p(u8 out[8], u64 in)
+{
+    store32_le_p(out    , (u32)in );
+    store32_le_p(out + 4, in >> 32);
+}
+
+
 static inline void
 blake2b_update_block(
   uint64_t *wv,
@@ -40,7 +74,7 @@ blake2b_update_block(
     {
       uint64_t *os = m_w;
       uint8_t *bj = d + i * (uint32_t)8U;
-      uint64_t u = load64_le(bj);
+      uint64_t u = load64_le_p(bj);
       uint64_t r = u;
       uint64_t x = r;
       os[i] = x;
@@ -957,14 +991,14 @@ inline void Hacl_Blake2b_32_blake2b_finish(uint32_t nn, uint8_t *output, uint64_
         uint32_t i;
         for (i = (uint32_t)0U; i < (uint32_t)4U; i++)
         {
-          store64_le(first + i * (uint32_t)8U, row0[i]);
+          store64_le_p(first + i * (uint32_t)8U, row0[i]);
         }
       }
       {
         uint32_t i;
         for (i = (uint32_t)0U; i < (uint32_t)4U; i++)
         {
-          store64_le(second + i * (uint32_t)8U, row1[i]);
+          store64_le_p(second + i * (uint32_t)8U, row1[i]);
         }
       }
       final = b;
