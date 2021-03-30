@@ -6,6 +6,7 @@
 #include "monocypher-ed25519.h"
 #include "Hacl_Poly1305_32.h"
 #include "Hacl_Curve25519_51.h"
+#include "Hacl_Ed25519.h"
 #include "Hacl_HMAC.h"
 #include "Hacl_Hash.h"
 
@@ -119,6 +120,28 @@ int x25519(void) {
     return status;
 }
 
+int sign_check_ed25519(void) {
+    ARRAY(hash1, 64);
+    ARRAY(hash2, 64);
+    ARRAY(key,   32);
+    ARRAY(pub1,  32);
+    ARRAY(pub2,  32);
+    ARRAY(in,    32);
+    int status = 0;
+    
+    crypto_ed25519_public_key(pub1, key);
+	Hacl_Ed25519_secret_to_public(pub2, key);
+	status |= crypto_verify32(pub1, pub2);
+    
+    crypto_ed25519_sign(hash1, key, pub1, in, 32);
+    Hacl_Ed25519_sign(hash2, key, 32, in);
+	status |= crypto_verify64(hash1, hash2);
+    
+    status |= crypto_ed25519_check(hash1, pub1, in, 32);
+    status |= !Hacl_Ed25519_verify(pub2, 32, in, hash2);
+    return status;
+}
+
 /* from Monocypher library, Loup hi! */
 static void iterate_x25519(uint8_t k[32], uint8_t u[32])
 {
@@ -164,6 +187,7 @@ int main(void) {
 	
 	status |= p1305();
 	status |= x25519();
+	status |= sign_check_ed25519();
 	// status |= test_x25519();	// RFC, passed
 	status |= sha512();
 	status |= hmac();
