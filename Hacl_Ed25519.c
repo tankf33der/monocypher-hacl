@@ -24,6 +24,40 @@
 
 #include "Hacl_Ed25519.h"
 
+typedef int8_t   i8;
+typedef uint8_t  u8;
+typedef int16_t  i16;
+typedef uint32_t u32;
+typedef int32_t  i32;
+typedef int64_t  i64;
+typedef uint64_t u64;
+static u32 load32_le_p(u8 *s)
+{
+    return (u32)s[0]
+        | ((u32)s[1] <<  8)
+        | ((u32)s[2] << 16)
+        | ((u32)s[3] << 24);
+}
+
+static u64 load64_le_p(u8 *s)
+{
+    return load32_le_p(s) | ((u64)load32_le_p(s+4) << 32);
+}
+static void store32_le_p(u8 out[4], u32 in)
+{
+    out[0] =  in        & 0xff;
+    out[1] = (in >>  8) & 0xff;
+    out[2] = (in >> 16) & 0xff;
+    out[3] = (in >> 24) & 0xff;
+}
+
+static void store64_le_p(u8 out[8], u64 in)
+{
+    store32_le_p(out    , (u32)in );
+    store32_le_p(out + 4, in >> 32);
+}
+
+
 static void fsum(uint64_t *a, uint64_t *b)
 {
   Hacl_Impl_Curve25519_Field51_fadd(a, a, b);
@@ -255,15 +289,15 @@ static void reduce(uint64_t *out)
 
 void Hacl_Bignum25519_load_51(uint64_t *output, uint8_t *input)
 {
-  uint64_t u0 = load64_le(input);
+  uint64_t u0 = load64_le_p(input);
   uint64_t i0 = u0;
-  uint64_t u1 = load64_le(input + (uint32_t)6U);
+  uint64_t u1 = load64_le_p(input + (uint32_t)6U);
   uint64_t i1 = u1;
-  uint64_t u2 = load64_le(input + (uint32_t)12U);
+  uint64_t u2 = load64_le_p(input + (uint32_t)12U);
   uint64_t i2 = u2;
-  uint64_t u3 = load64_le(input + (uint32_t)19U);
+  uint64_t u3 = load64_le_p(input + (uint32_t)19U);
   uint64_t i3 = u3;
-  uint64_t u = load64_le(input + (uint32_t)24U);
+  uint64_t u = load64_le_p(input + (uint32_t)24U);
   uint64_t i4 = u;
   uint64_t output0 = i0 & (uint64_t)0x7ffffffffffffU;
   uint64_t output1 = i1 >> (uint32_t)3U & (uint64_t)0x7ffffffffffffU;
@@ -283,10 +317,10 @@ static void store_4(uint8_t *output, uint64_t v0, uint64_t v1, uint64_t v2, uint
   uint8_t *b1 = output + (uint32_t)8U;
   uint8_t *b2 = output + (uint32_t)16U;
   uint8_t *b3 = output + (uint32_t)24U;
-  store64_le(b0, v0);
-  store64_le(b1, v1);
-  store64_le(b2, v2);
-  store64_le(b3, v3);
+  store64_le_p(b0, v0);
+  store64_le_p(b1, v1);
+  store64_le_p(b2, v2);
+  store64_le_p(b3, v3);
 }
 
 void Hacl_Bignum25519_store_51(uint8_t *output, uint64_t *input)
@@ -1605,7 +1639,7 @@ static void add_modq(uint64_t *out, uint64_t *x, uint64_t *y)
 static uint64_t hload56_le(uint8_t *b, uint32_t off)
 {
   uint8_t *b8 = b + off;
-  uint64_t u = load64_le(b8);
+  uint64_t u = load64_le_p(b8);
   uint64_t z = u;
   return z & (uint64_t)0xffffffffffffffU;
 }
@@ -1638,7 +1672,7 @@ static void load_64_bytes(uint64_t *out, uint8_t *b)
 static uint64_t hload56_le_(uint8_t *b, uint32_t off)
 {
   uint8_t *b8 = b + off;
-  uint64_t u = load64_le(b8);
+  uint64_t u = load64_le_p(b8);
   uint64_t z = u;
   return z & (uint64_t)0xffffffffffffffU;
 }
@@ -1662,7 +1696,7 @@ static void load_32_bytes(uint64_t *out, uint8_t *b)
 static void hstore56_le(uint8_t *out, uint32_t off, uint64_t x)
 {
   uint8_t *b8 = out + off;
-  store64_le(b8, x);
+  store64_le_p(b8, x);
 }
 
 static void store_56(uint8_t *out, uint64_t *b)
