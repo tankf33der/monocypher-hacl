@@ -24,6 +24,33 @@
 
 #include "Hacl_Hash.h"
 
+typedef int8_t   i8;
+typedef uint8_t  u8;
+typedef int16_t  i16;
+typedef uint32_t u32;
+typedef int32_t  i32;
+typedef int64_t  i64;
+typedef uint64_t u64;
+static void store32_be_p(u8 out[4], u32 in)
+{
+    out[0] = (in >> 24) & 0xff;
+    out[1] = (in >> 16) & 0xff;
+    out[2] = (in >> 8)  & 0xff;
+    out[3] = in         & 0xff;
+}
+
+static void store64_be_p(u8 out[8], u64 in)
+{
+    store32_be_p(out    , in >> 32 );
+    store32_be_p(out + 4, (u32)in);
+}
+static void store128_be_p(u8 out[16], FStar_UInt128_uint128 in)
+{
+	store64_be_p(out    , in.high);
+	store64_be_p(out + 8, in.low);
+}
+
+
 uint64_t Hacl_Hash_Core_Blake2_update_blake2s_32(uint32_t *s, uint64_t totlen, uint8_t *block)
 {
   uint32_t wv[16U] = { 0U };
@@ -6300,7 +6327,7 @@ void Hacl_Hash_Core_SHA2_pad_384(FStar_UInt128_uint128 len, uint8_t *dst)
           + (uint32_t)(FStar_UInt128_uint128_to_uint64(len) % (uint64_t)(uint32_t)128U)))
         % (uint32_t)128U;
   len_ = FStar_UInt128_shift_left(len, (uint32_t)3U);
-  store128_be(dst3, len_);
+  store128_be_p(dst3, len_);
 }
 
 void Hacl_Hash_Core_SHA2_pad_512(FStar_UInt128_uint128 len, uint8_t *dst)
@@ -6339,7 +6366,7 @@ void Hacl_Hash_Core_SHA2_pad_512(FStar_UInt128_uint128 len, uint8_t *dst)
           + (uint32_t)(FStar_UInt128_uint128_to_uint64(len) % (uint64_t)(uint32_t)128U)))
         % (uint32_t)128U;
   len_ = FStar_UInt128_shift_left(len, (uint32_t)3U);
-  store128_be(dst3, len_);
+  store128_be_p(dst3, len_);
 }
 
 void Hacl_Hash_Core_SHA2_finish_224(uint32_t *s, uint8_t *dst)
