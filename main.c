@@ -51,7 +51,7 @@ int hmac(void) {
     ARRAY(in  , 64);
     int status = 0;
     
-    for(size_t i = 0; i < 3; i++) {
+    for(size_t i = 0; i < 6; i++) {
     	hash1[1] = 77;
         crypto_hmac_sha512(hash1, key, i, in, i);
         Hacl_HMAC_compute_sha2_512(hash2, key, i, in, i);
