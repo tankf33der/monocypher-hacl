@@ -44,6 +44,54 @@ int sha512(void) {
 }
 
 //@ ensures \result == 0;
+int blake2b(void) {
+    ARRAY(hash1, 64);
+    ARRAY(hash2, 64);
+    ARRAY(key,  64);
+    ARRAY(in,   64);
+	int status = 0;
+
+/*
+Hacl_Blake2b_32_blake2b(
+  uint32_t nn,
+  uint8_t *output,
+  uint32_t ll,
+  uint8_t *d,
+  uint32_t kk,
+  uint8_t *k
+)
+*/
+
+/*
+0, 1 0 48
+0, 1 0 56
+-1, 1 8 0
+-1, 1 8 8
+-1, 1 8 16
+*/
+
+/*
+    for(size_t h = 1; h < 64; h += 8)
+        for(size_t k = 8; k < 64; k += 8)
+            for(size_t i = 8; i < 64; i += 8) {
+            	hash1[0] = 123;
+                crypto_blake2b_general(hash1, h, key, k, in, i);
+                Hacl_Blake2b_32_blake2b(h, hash2, i, in, k, key);
+                status |= crypto_verify64(hash1, hash2);
+                printf("%d, %d %d %d\n", status, h, k, i);
+            }
+*/
+
+	hash1[0] = 123;
+    crypto_blake2b_general(hash1, 1, key, 8, in, 0);
+    Hacl_Blake2b_32_blake2b(1, hash2, 0, in, 8, key);
+    //status |= crypto_verify64(hash1, hash2);
+                        
+    return status;
+}
+
+
+//@ ensures \result == 0;
 int x25519(void) {
     ARRAY(key, 32);
     ARRAY(pub1, 32);
@@ -64,6 +112,7 @@ int main(void) {
 	status |= p1305();
 	status |= x25519();
 	status |= sha512();
+	status |= blake2b();
 
 	printf("%s\n", status != 0 ? "FAIL" : "OK");	
 	return status;

@@ -32,7 +32,7 @@
    *F
    (quote
       # p1305 x25519 sha512
-      sha512
+      blake2b
    )
    *L
    (make
