@@ -31,8 +31,8 @@
    )
    *F
    (quote
-      # p1305 x25519 sha512
-      blake2b
+      # p1305 x25519 sha512 blake2b
+      hmac
    )
    *L
    (make

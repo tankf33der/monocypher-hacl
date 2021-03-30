@@ -6,6 +6,7 @@
 #include "monocypher-ed25519.h"
 #include "Hacl_Poly1305_32.h"
 #include "Hacl_Curve25519_51.h"
+#include "Hacl_HMAC.h"
 #include "Hacl_Hash.h"
 
 #define ARRAY(name, size) \
@@ -38,6 +39,22 @@ int sha512(void) {
     	hash1[0] = 123;
         crypto_sha512(hash1, in, i);
         Hacl_Hash_SHA2_hash_512(in, i, hash2);
+        status |= crypto_verify64(hash1, hash2);
+    }
+    return status;
+}
+
+int hmac(void) {
+    ARRAY(hash1, 64);
+    ARRAY(hash2, 64);
+    ARRAY(key , 64);
+    ARRAY(in  , 64);
+    int status = 0;
+    
+    for(size_t i = 0; i < 64; i++) {
+    	hash1[1] = 77;
+        crypto_hmac_sha512(hash1, key, i, in, i);
+        Hacl_HMAC_compute_sha2_512(hash2, key, i, in, i);
         status |= crypto_verify64(hash1, hash2);
     }
     return status;
@@ -151,6 +168,7 @@ int main(void) {
 	status |= x25519();
 	//status |= test_x25519();	// RFC
 	status |= sha512();
+	status |= hmac();
 	status |= blake2b();
 
 	printf("%s\n", status != 0 ? "FAIL" : "OK");	
