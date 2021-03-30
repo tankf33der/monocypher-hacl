@@ -27,6 +27,21 @@ static int p1305(void) {
 }
 
 //@ ensures \result == 0;
+int sha512(void) {
+    ARRAY(hash1,  64);
+    ARRAY(hash2,  64);
+    ARRAY(in  , 128);
+	int status = 0;
+    for(size_t i = 0; i < 128; i++) {
+    	hash1[0] = 123;
+        crypto_sha512(hash1, in, i);
+        Hacl_Hash_SHA2_hash_512(in, i, hash2);
+        status |= crypto_verify64(hash1, hash2);
+    }
+    return status;
+}
+
+//@ ensures \result == 0;
 int x25519(void) {
     ARRAY(key, 32);
     ARRAY(pub1, 32);
@@ -46,6 +61,7 @@ int main(void) {
 	
 	status |= p1305();
 	status |= x25519();
+	status |= sha512();
 
 	printf("%s\n", status != 0 ? "FAIL" : "OK");	
 	return status;
