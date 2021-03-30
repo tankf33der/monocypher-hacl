@@ -1683,7 +1683,7 @@ static void load_32_bytes(uint64_t *out, uint8_t *b)
   uint64_t b1 = hload56_le_(b, (uint32_t)7U);
   uint64_t b2 = hload56_le_(b, (uint32_t)14U);
   uint64_t b3 = hload56_le_(b, (uint32_t)21U);
-  uint32_t u = load32_le(b + (uint32_t)28U);
+  uint32_t u = load32_le_p(b + (uint32_t)28U);
   uint32_t b4 = u;
   uint64_t b41 = (uint64_t)b4;
   out[0U] = b0;
@@ -1711,7 +1711,7 @@ static void store_56(uint8_t *out, uint64_t *b)
   hstore56_le(out, (uint32_t)7U, b1);
   hstore56_le(out, (uint32_t)14U, b2);
   hstore56_le(out, (uint32_t)21U, b3);
-  store32_le(out + (uint32_t)28U, b4_);
+  store32_le_p(out + (uint32_t)28U, b4_);
 }
 
 static void sha512_pre_msg(uint8_t *h, uint8_t *prefix, uint32_t len, uint8_t *input)
