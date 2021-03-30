@@ -3,8 +3,10 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include "monocypher.h"
+#include "monocypher-ed25519.h"
 #include "Hacl_Poly1305_32.h"
 #include "Hacl_Curve25519_51.h"
+#include "Hacl_Hash.h"
 
 #define ARRAY(name, size) \
     uint8_t name[size]; \
