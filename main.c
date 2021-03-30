@@ -71,8 +71,8 @@ Hacl_Blake2b_32_blake2b(
 */
 
     for(size_t h = 1; h < 64; h += 8)
-        for(size_t k = 8; k < 64; k += 8)
-            for(size_t i = 8; i < 64; i += 8) {
+        for(size_t k = 0; k < 64; k += 8)
+            for(size_t i = 0; i < 64; i += 8) {
             	hash1[0] = 123;
                 crypto_blake2b_general(hash1, h, key, k, in, i);
                 Hacl_Blake2b_32_blake2b(h, hash2, i, in, k, key);
