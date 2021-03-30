@@ -31,6 +31,21 @@ typedef uint32_t u32;
 typedef int32_t  i32;
 typedef int64_t  i64;
 typedef uint64_t u64;
+
+
+static u32 load32_be_p(u8 *s)
+{
+    return (u32)s[0] << 24
+        | ((u32)s[1] << 16)
+        | ((u32)s[2] << 8)
+        | ((u32)s[3] << 0);
+}
+
+static u64 load64_be_p(u8 *s)
+{
+    return ((u64)load32_be_p(s) << 32) | load32_be_p(s+4);
+}
+
 static void store32_be_p(u8 out[4], u32 in)
 {
     out[0] = (in >> 24) & 0xff;
@@ -6154,7 +6169,7 @@ void Hacl_Hash_Core_SHA2_update_512(uint64_t *hash, uint8_t *block)
       if (i < (uint32_t)16U)
       {
         uint8_t *b = block + i * (uint32_t)8U;
-        uint64_t u = load64_be(b);
+        uint64_t u = load64_be_p(b);
         computed_ws[i] = u;
       }
       else
@@ -6405,7 +6420,7 @@ void Hacl_Hash_Core_SHA2_finish_512(uint64_t *s, uint8_t *dst)
   uint32_t i;
   for (i = (uint32_t)0U; i < (uint32_t)8U; i++)
   {
-    store64_be(dst + i * (uint32_t)8U, uu____0[i]);
+    store64_be_p(dst + i * (uint32_t)8U, uu____0[i]);
   }
 }
 
