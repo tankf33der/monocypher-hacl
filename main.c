@@ -71,6 +71,24 @@ int hmac(void) {
     return status;
 }
 
+int hmac_full(void) {
+    ARRAY(hash1, 64);
+    ARRAY(hash2, 64);
+    ARRAY(key , 128);
+    ARRAY(in  , 128);
+    int status = 0;
+
+    for(size_t i = 0; i < 128; i++)
+    	for(size_t j = 0; j < 128; j++) {
+	    	hash1[1] = 77;
+	        crypto_hmac_sha512(hash1, key, i, in, j);
+	        Hacl_HMAC_compute_sha2_512(hash2, key, i, in, j);
+	        status |= crypto_verify64(hash1, hash2);
+	    }
+    return status;
+}
+
+
 //@ ensures \result == 0;
 int blake2b(void) {
     ARRAY(hash1, 64);
@@ -141,6 +159,32 @@ int sign_check_ed25519(void) {
     return status;
 }
 
+int ed25519_full(void) {
+    ARRAY(hash1, 64);
+    ARRAY(hash2, 64);
+    ARRAY(key,   32);
+    ARRAY(pub1,  32);
+    ARRAY(pub2,  32);
+    ARRAY(in,    128);
+    int status = 0;
+    
+    crypto_ed25519_public_key(pub1, key);
+	Hacl_Ed25519_secret_to_public(pub2, key);
+	status |= crypto_verify32(pub1, pub2);
+    
+    for(size_t i = 0; i < 128; i++) {
+    	hash1[2] = 123;
+    	
+	    crypto_ed25519_sign(hash1, key, pub1, in, i);
+    	Hacl_Ed25519_sign(hash2, key, i, in);
+		status |= crypto_verify64(hash1, hash2);
+    
+   		status |= crypto_ed25519_check(hash1, pub1, in, i);
+    	status |= !Hacl_Ed25519_verify(pub2, i, in, hash2);	// as bool: 1 - ok, 0 - wrong
+	}
+    return status;
+}
+
 /* from Monocypher library, Loup hi! */
 static void iterate_x25519(uint8_t k[32], uint8_t u[32])
 {
@@ -180,7 +224,11 @@ int main(void) {
 	status |= sha512();
 	status |= hmac();
 	status |= blake2b();
-	// status |= test_x25519();	// RFC, passed
+
+	// FULLs
+	status |= hmac_full();
+	status |= ed25519_full();
+	// status |= test_x25519();	// RFC, slow passed
 
 	printf("%s\n", status != 0 ? "FAIL" : "OK");	
 	return status;
