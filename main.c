@@ -137,6 +137,8 @@ void ed25519_zero(void) {
     ARRAY(key,   32);
     ARRAY(in,    32);
 
+	memset(hash1, 0, 64);
+	memset(hash2, 0, 64);
 	memset(in, 0, 32);
 	memset(key, 0, 32);
 	key[31] = 128;
