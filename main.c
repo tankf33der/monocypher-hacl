@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <string.h>
 #include "monocypher.h"
 #include "monocypher-ed25519.h"
 #include "Hacl_Poly1305_32.h"
@@ -130,6 +131,27 @@ int x25519(void) {
     return status;
 }
 
+void ed25519_zero(void) {
+	ARRAY(hash1, 64);
+	ARRAY(hash2, 64);
+    ARRAY(key,   32);
+    ARRAY(in,    32);
+
+	memset(in, 0, 32);
+	memset(key, 0, 32);
+	key[31] = 128;
+
+	for(size_t i = 0; i < 256; i++) {
+		int mono;
+		int hacl;
+		
+		in[0] = i;
+		mono = crypto_ed25519_check(hash1, key, in, 1);
+		hacl = Hacl_Ed25519_verify(key, 1, in, hash2);
+		printf("%d=%d\n", mono, hacl);
+	}
+}
+
 //@ ensures \result == 0;
 int sign_check_ed25519(void) {
     ARRAY(hash1, 64);
@@ -228,6 +250,7 @@ int main(void) {
 	// FULLs
 	status |= hmac_full();
 	status |= ed25519_full();
+	ed25519_zero();
 	// status |= test_x25519();	// RFC, slow passed
 
 	printf("%s\n", status != 0 ? "FAIL" : "OK");	
